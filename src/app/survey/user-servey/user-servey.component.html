@@ -1,0 +1,112 @@
+<mat-horizontal-stepper>
+
+    <mat-step label="Confirm your Email">
+        <mat-card class="col-md-5">
+            <mat-card-content>
+                <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input matInput placeholder="Ex. example.com"  [value]="emailData" [disabled]="!edit" autocomplete="off" #email>
+                 </mat-form-field>
+            </mat-card-content>
+            <mat-card-footer align="end" class="py-3">
+                <button *ngIf="!edit" class="mx-3" color="warn" mat-raised-button (click)="edit = !edit">Edit</button>
+                <button class="mx-3" mat-raised-button color="primary" (click)="EditChange(email.value)" matStepperNext>next</button>
+            </mat-card-footer>
+        </mat-card>
+    </mat-step>
+
+    <mat-step label="Enter your name">
+        <mat-card class="col-md-5">
+            <mat-card-content>
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input matInput placeholder="Ex. Alex" autocomplete="off">
+                 </mat-form-field>
+            </mat-card-content>
+            <mat-card-footer align="end" class="py-3">
+                <button class="mx-3" mat-raised-button color="primary" matStepperPrevious>previous</button>
+                <button class="mx-3" mat-raised-button color="primary" matStepperNext>next</button>
+            </mat-card-footer>
+        </mat-card>
+    </mat-step>
+
+    <mat-step label="age">
+        <mat-card class="col-md-5">
+            <mat-card-content>
+                <label id="checkbox-group-label">What is your age?</label>
+                <mat-slider
+                    thumbLabel
+                    tickInterval="1"
+                    min="10"
+                    max="100">
+                </mat-slider>
+            </mat-card-content>
+            <mat-card-footer align="end" class="py-3">
+                <button class="mx-3" mat-raised-button color="primary" matStepperPrevious>previous</button>
+                <button class="mx-3" mat-raised-button color="primary" matStepperNext>next</button>
+            </mat-card-footer>
+        </mat-card>
+    </mat-step>
+
+    <mat-step label="Rate Product">
+        <mat-card class="col-md-5">
+            <mat-card-content>
+                <label id="checkbox-group-label">Which of the following words would you use to describe our product?</label>
+                <mat-radio-group aria-label="Select an option">
+                    <mat-radio-button *ngFor="let type of productReview" [value]="type">
+                        {{type}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </mat-card-content>
+            <mat-card-footer  align="end" class="py-3">
+                <button mat-raised-button color="primary" matStepperPrevious>previous</button>
+                <button class="mx-3" mat-raised-button color="primary" matStepperNext>Next</button>
+            </mat-card-footer>
+        </mat-card>
+    </mat-step>
+
+    <mat-step label="Feture Types">
+        <mat-card class="col-md-5">
+            <mat-card-content>
+                <label id="radio-group-label"> Which 3 features are the most valuable to you?</label>
+                <mat-checkbox color="primary" *ngFor="let type of features" [value]="type">
+                    {{type}}
+                </mat-checkbox>
+            </mat-card-content>
+            <mat-card-footer  align="end" class="py-3">
+                <button mat-raised-button color="primary" matStepperPrevious>previous</button>
+                <button class="mx-3" mat-raised-button color="primary" matStepperNext>Next</button>
+            </mat-card-footer>
+        </mat-card>
+    </mat-step>
+
+    <mat-step label="Product Concern">
+        <mat-card class="col-md-5">
+            <mat-card-content>
+                <label id="radio-group-label"> How responsive have we been to your questions or concerns about our products?</label>
+                <mat-form-field>
+                    <mat-select name="type">
+                      <mat-option *ngFor="let type of responsive" [value]="type">
+                        {{type}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+            </mat-card-content>
+            <mat-card-footer  align="end" class="py-3">
+                <button mat-raised-button color="primary" matStepperPrevious>previous</button>
+                <button class="mx-3" mat-raised-button color="primary" matStepperNext>Next</button>
+            </mat-card-footer>
+        </mat-card>
+    </mat-step>
+
+    <mat-step label="Product rating">
+        <mat-card class="col-md-5">
+            
+            <mat-card-footer  align="end" class="py-3">
+                <button mat-raised-button color="primary" matStepperPrevious>previous</button>
+                <button class="mx-3" mat-raised-button color="primary">submit</button>
+            </mat-card-footer>
+        </mat-card>
+    </mat-step>
+
+</mat-horizontal-stepper>

@@ -1,0 +1,17 @@
+.mat-card{
+    margin: auto;
+}
+.mat-form-field{
+    width: 100%;
+    margin:auto;
+}
+label{
+    display: block;
+}
+mat-radio-button{
+    display: block;
+}
+
+mat-checkbox{
+    display: block;
+}
