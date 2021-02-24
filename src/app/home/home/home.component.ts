@@ -14,9 +14,9 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  checkEmail(value){
-    if(value){
-      this.email.email.next(value);
+  checkEmail(email){
+    if(email.valid){
+      this.email.email.next(email.value);
       this.router.navigate(['/survey']);
     }
 

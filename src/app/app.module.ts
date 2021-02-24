@@ -22,6 +22,8 @@ import { HomeModule } from './home/home.module';
     SurveyModule,
     HomeModule
   ],
+  exports:[
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

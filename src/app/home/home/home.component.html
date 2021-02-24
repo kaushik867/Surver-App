@@ -15,10 +15,16 @@
     <mat-card-content>
             <mat-form-field>
                <mat-label>Email</mat-label>
-               <input matInput placeholder="Ex. example@gmail.com" autocomplete="off" #email>
+               <input matInput required pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" placeholder="Ex. example@gmail.com" 
+                autocomplete="off" #email="ngModel" #email name="email" ngModel>
+               <div *ngIf="email.errors && (email.invalid && email.touched)">
+                    <small *ngIf="email.errors.required">Email is required</small>
+                    <small *ngIf="email.errors.pattern">Invalid email (eg: example@gmail.com)</small>
+                </div>
             </mat-form-field>
+
             <mat-card-footer align="end" class="py-3">
-                <button (click)="checkEmail(email.value)" class="mx-3" mat-raised-button color="primary">Proceed</button>
+                <button (click)="checkEmail(email)" class="mx-3" mat-raised-button color="primary">Proceed</button>
             </mat-card-footer>
     </mat-card-content>
 </mat-card>

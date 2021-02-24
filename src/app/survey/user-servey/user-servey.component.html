@@ -1,26 +1,26 @@
-<mat-horizontal-stepper>
 
-    <mat-step label="Confirm your Email">
-        <mat-card class="col-md-5">
+<mat-horizontal-stepper #stepper>
+    <form #surveyForm = "ngForm" (ngSubmit)="onSubmit(surveyForm.value)" >
+    <mat-step>
+        <mat-card class="col-md-5 my-5">
             <mat-card-content>
                 <mat-form-field>
                     <mat-label>Email</mat-label>
-                    <input matInput placeholder="Ex. example.com"  [value]="emailData" [disabled]="!edit" autocomplete="off" #email>
+                    <input matInput placeholder="Ex. example.com" name="email" [(ngModel)]="emailData" autocomplete="off" #email ngModel>
                  </mat-form-field>
             </mat-card-content>
             <mat-card-footer align="end" class="py-3">
-                <button *ngIf="!edit" class="mx-3" color="warn" mat-raised-button (click)="edit = !edit">Edit</button>
                 <button class="mx-3" mat-raised-button color="primary" (click)="EditChange(email.value)" matStepperNext>next</button>
             </mat-card-footer>
         </mat-card>
     </mat-step>
 
-    <mat-step label="Enter your name">
-        <mat-card class="col-md-5">
+    <mat-step>
+        <mat-card class="col-md-5 my-5">
             <mat-card-content>
                 <mat-form-field>
                     <mat-label>Name</mat-label>
-                    <input matInput placeholder="Ex. Alex" autocomplete="off">
+                    <input matInput placeholder="Ex. Alex" name="name" autocomplete="off" ngModel>
                  </mat-form-field>
             </mat-card-content>
             <mat-card-footer align="end" class="py-3">
@@ -30,17 +30,20 @@
         </mat-card>
     </mat-step>
 
-    <mat-step label="age">
-        <mat-card class="col-md-5">
+    <mat-step>
+        <mat-card class="col-md-5 my-5">
             <mat-card-content>
                 <label id="checkbox-group-label">What is your age?</label>
-                <mat-slider
+                <mat-slider 
+                    name="age"
                     thumbLabel
                     tickInterval="1"
                     min="10"
-                    max="100">
+                    max="100"
+                    [(ngModel)]="value">
                 </mat-slider>
             </mat-card-content>
+            your age is {{value}}
             <mat-card-footer align="end" class="py-3">
                 <button class="mx-3" mat-raised-button color="primary" matStepperPrevious>previous</button>
                 <button class="mx-3" mat-raised-button color="primary" matStepperNext>next</button>
@@ -48,12 +51,12 @@
         </mat-card>
     </mat-step>
 
-    <mat-step label="Rate Product">
-        <mat-card class="col-md-5">
+    <mat-step>
+        <mat-card class="col-md-5 my-5">
             <mat-card-content>
                 <label id="checkbox-group-label">Which of the following words would you use to describe our product?</label>
-                <mat-radio-group aria-label="Select an option">
-                    <mat-radio-button *ngFor="let type of productReview" [value]="type">
+                <mat-radio-group aria-label="Select an option" name="productReview" ngModel>
+                    <mat-radio-button *ngFor="let type of productReview"  [value]="type">
                         {{type}}
                     </mat-radio-button>
                 </mat-radio-group>
@@ -65,12 +68,12 @@
         </mat-card>
     </mat-step>
 
-    <mat-step label="Feture Types">
-        <mat-card class="col-md-5">
+    <mat-step>
+        <mat-card class="col-md-5 my-5">
             <mat-card-content>
                 <label id="radio-group-label"> Which 3 features are the most valuable to you?</label>
-                <mat-checkbox color="primary" *ngFor="let type of features" [value]="type">
-                    {{type}}
+                <mat-checkbox color="primary" *ngFor="let item of features" name="features" (click)="onChange()"[value]="item.type" [(ngModel)]="item.isSelected" >
+                    {{item.type}}
                 </mat-checkbox>
             </mat-card-content>
             <mat-card-footer  align="end" class="py-3">
@@ -80,12 +83,12 @@
         </mat-card>
     </mat-step>
 
-    <mat-step label="Product Concern">
-        <mat-card class="col-md-5">
+    <mat-step>
+        <mat-card class="col-md-5 my-5">
             <mat-card-content>
                 <label id="radio-group-label"> How responsive have we been to your questions or concerns about our products?</label>
                 <mat-form-field>
-                    <mat-select name="type">
+                    <mat-select name="responsiveness" ngModel>
                       <mat-option *ngFor="let type of responsive" [value]="type">
                         {{type}}
                       </mat-option>
@@ -99,14 +102,21 @@
         </mat-card>
     </mat-step>
 
-    <mat-step label="Product rating">
-        <mat-card class="col-md-5">
-            
+    <mat-step>
+        <mat-card class="col-md-5 my-5">
+            <mat-card-title class="text-center">Rate us !!!</mat-card-title>
+            <div class="text-center">
+                <ng-conatiner *ngFor="let no of star">
+                    <app-star-rating (starEnter)="onStarEnter($event)" (starLeave)="onStarLeave($event)" (starClicked)="onStarClicked($event)"
+                    [stars]="no" [rating]="rating || hoverState"></app-star-rating>
+                </ng-conatiner>
+            </div>
             <mat-card-footer  align="end" class="py-3">
                 <button mat-raised-button color="primary" matStepperPrevious>previous</button>
-                <button class="mx-3" mat-raised-button color="primary">submit</button>
+                <button class="mx-3" mat-raised-button color="warn" (click)="stepper.reset()">Reset</button>
+                <button type="submit"  mat-raised-button color="primary">submit</button>
             </mat-card-footer>
         </mat-card>
     </mat-step>
-
+</form>
 </mat-horizontal-stepper>
