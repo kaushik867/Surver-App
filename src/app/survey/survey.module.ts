@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialsModule } from '../materials/materials.module';
 import { UserServeyComponent } from './user-servey/user-servey.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -15,7 +15,8 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     MaterialsModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports:[
     UserServeyComponent
