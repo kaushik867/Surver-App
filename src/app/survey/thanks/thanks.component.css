@@ -1,0 +1,11 @@
+.mat-icon {
+    transform: scale(2);
+}
+
+mat-card{
+    height: 80%;
+    width: 100%;
+}
+a{
+    text-decoration: none;
+}

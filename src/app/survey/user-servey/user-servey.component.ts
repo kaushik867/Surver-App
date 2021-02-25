@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {  FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { SurveyService } from 'src/app/services/survey.service';
 
 @Component({
@@ -9,6 +10,25 @@ import { SurveyService } from 'src/app/services/survey.service';
 })
 export class UserServeyComponent implements OnInit {
 
+  get emailVal(){
+    return this.surveyForm.get('email');
+  }
+  get nameVal(){
+    return this.surveyForm.get('name');
+  }
+  get reviewVal(){
+    return this.surveyForm.get('review');
+  }
+  get responseVal(){
+    return this.surveyForm.get('responsiveness');
+  }
+  get ageVal(){
+    return this.surveyForm.get('age');
+  }
+  get ratingVal(){
+    return this.surveyForm.get('rating');
+  }
+
   public surveyForm;
   public productReview = ['Buggy', 'Fine, but there are some issues', 'Great'];
   public selectedFeaturesValue=[];
@@ -16,27 +36,27 @@ export class UserServeyComponent implements OnInit {
   public responsive: Array<string>= ['Very responsive', 'Usually responsive', 'Not responsive'];
   public star:Array<number> = [1,2,3,4,5]; 
   public rating: number = 0;
-  public hoverState: number = 0; 
-  public emailData: string;
-  public updatedFeature:Array<any> = [];
-  public value:number = 10;
+  public hoverState: number = 0;
+  public featureSelected:boolean = false;
+  public disabled="true";
+  public emailData:string;
 
-  constructor(private email:SurveyService, private _fb: FormBuilder) {}
+  constructor(private email:SurveyService, private _fb: FormBuilder, private route: Router) {}
 
   ngOnInit() {
     this.surveyForm = this._fb.group({
-      email: [''],
-      name: [''],
-      review: [''],
-      responsiveness: [''],
+      email: [{value: '', disabled: this.disabled}, [Validators.required, Validators.pattern(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/)]],
+      name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]+[,\.'\-]?[a-zA-Z ]+$/)]],
+      review: ['', Validators.required],
+      responsiveness: ['', Validators.required],
       feature: this.addFeatureControls(),
-      age: [''],
-      rating:['']
+      age: ['', Validators.required],
+      rating:['', Validators.required]
     });
 
    this.email.email.subscribe(data=>{
-     this.emailData = data;
      this.surveyForm.controls.email.setValue(data);
+     this.emailData = data;
    })
   }
 
@@ -76,11 +96,29 @@ export class UserServeyComponent implements OnInit {
       if(control.value){
         this.selectedFeaturesValue.push(this.features[i]);
       }
-    })
+    });
+   if(this.selectedFeaturesValue.length>=3){
+    this.featureSelected = true;
+   }
+   else{
+     this.featureSelected = false;
+   }
+  }
+
+  editEmail(){
+    this.surveyForm.controls['email'].enable();
   }
 
   submitHandler(){
-    this.surveyForm.value.feature = this.selectedFeaturesValue;
-    console.log(typeof this.surveyForm);
+    if(this.surveyForm.valid && this.featureSelected){
+      this.surveyForm.value['email']= this.emailData;
+      this.surveyForm.value.feature = this.selectedFeaturesValue;
+      this.email.formSubmission.next(true);
+      this.route.navigate(['/thanks']);
+    }
+  }
+
+  changeEmail(val){
+    this.email.email.next(val.target.value);
   }
 }

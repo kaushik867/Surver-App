@@ -4,6 +4,8 @@ import { MaterialsModule } from '../materials/materials.module';
 import { UserServeyComponent } from './user-servey/user-servey.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ThanksComponent } from './thanks/thanks.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -11,15 +13,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   declarations: [
     UserServeyComponent,
     StarRatingComponent,
+    ThanksComponent,
   ],
   imports: [
     CommonModule,
     MaterialsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule
   ],
   exports:[
-    UserServeyComponent
+    UserServeyComponent,
+    ThanksComponent
   ]
 })
 export class SurveyModule { }

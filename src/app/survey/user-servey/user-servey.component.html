@@ -1,27 +1,42 @@
 
-<mat-horizontal-stepper #stepper>
+<mat-horizontal-stepper #stepper linear>
     <form [formGroup]="surveyForm">
-    <mat-step>
+    <mat-step [completed]="emailVal.valid || disabled">
         <mat-card class="col-md-5 my-5">
             <mat-card-content>
                <mat-form-field>
                     <mat-label>Email</mat-label>
-                    <input matInput placeholder="Ex. example.com" formControlName='email' >
+                    <input matInput placeholder="Ex. example.com" formControlName='email' (change)="changeEmail($event)">
+                    <div *ngIf="emailVal.invalid && emailVal.touched">
+                        <small *ngIf="emailVal.errors?.required">Email is required</small>
+                        <small *ngIf="emailVal.errors?.pattern">Invalid email (eg: example@gmail.com)</small>
+                    </div>
                 </mat-form-field>
+                <div *ngIf="emailVal.invalid && emailVal.untouched">
+                    <small *ngIf="emailVal.errors?.required">Email is required please enter you e-mail</small>
+                </div>
             </mat-card-content>
             <mat-card-footer align="end" class="py-3">
+                <button *ngIf="disabled"  mat-raised-button color="aceent" (click)="editEmail(); disabled = !disabled">Edit</button>
                 <button class="mx-3" mat-raised-button color="primary"  matStepperNext>next</button>
             </mat-card-footer>
         </mat-card>
     </mat-step>
 
-    <mat-step>
+    <mat-step [completed]="nameVal.valid">
         <mat-card class="col-md-5 my-5">
             <mat-card-content>
                 <mat-form-field>
                     <mat-label>name</mat-label>
                     <input matInput placeholder="Ex. example.com" formControlName='name'>
+                    <div *ngIf="nameVal.invalid && nameVal.touched">
+                        <small *ngIf="nameVal.errors?.required">name is required</small>
+                        <small *ngIf="nameVal.errors?.pattern">Must be min 2 character</small>
+                    </div>
                 </mat-form-field>
+                <div *ngIf="nameVal.invalid && nameVal.untouched">
+                    <small *ngIf="nameVal.errors?.required">Name is required please enter you name</small>
+                </div>
             </mat-card-content>
             <mat-card-footer align="end" class="py-3">
                 <button class="mx-3" mat-raised-button color="primary" matStepperPrevious>previous</button>
@@ -30,7 +45,7 @@
         </mat-card>
     </mat-step>
 
-    <mat-step>
+    <mat-step [completed]="ageVal.valid">
         <mat-card class="col-md-5 my-5">
             <mat-card-content>
                  <label id="checkbox-group-label">What is your age?</label>
@@ -42,8 +57,11 @@
                     max="100"
                     formControlName="age">
                 </mat-slider>
+                <div *ngIf="ageVal.invalid">
+                    <small *ngIf="ageVal.errors?.required">age is required slide above circle</small>
+                </div>
             </mat-card-content>
-            your age is {{value}}
+            your age is {{surveyForm.value.age}}
             <mat-card-footer align="end" class="py-3">
                 <button class="mx-3" mat-raised-button color="primary" matStepperPrevious>previous</button>
                 <button class="mx-3" mat-raised-button color="primary" matStepperNext>next</button>
@@ -51,7 +69,7 @@
         </mat-card>
     </mat-step>
 
-    <mat-step>
+    <mat-step [completed]="reviewVal.valid">
         <mat-card class="col-md-5 my-5">
             <mat-card-content>
                <label id="checkbox-group-label">Which of the following words would you use to describe our product?</label>
@@ -61,6 +79,9 @@
                     </mat-radio-button>
                 </mat-radio-group>
             </mat-card-content>
+            <div *ngIf="reviewVal.invalid">
+                <small *ngIf="reviewVal.errors?.required">select one of the above option</small>
+            </div>
             <mat-card-footer  align="end" class="py-3">
                 <button mat-raised-button color="primary" matStepperPrevious>previous</button>
                 <button class="mx-3" mat-raised-button color="primary" matStepperNext>Next</button>
@@ -68,7 +89,7 @@
         </mat-card>
     </mat-step>
 
-    <mat-step>
+    <mat-step [completed]="featureSelected">
         <mat-card class="col-md-5 my-5">
             <mat-card-content>
                 <label id="radio-group-label"> Which 3 features are the most valuable to you?</label>
@@ -76,6 +97,9 @@
                     <mat-checkbox color="primary" [formControl]="controls" (change)="getSelectedFeaturesValues()">
                         {{features[i]}}
                     </mat-checkbox>
+                </div>
+                <div *ngIf="!featureSelected">
+                    <small>Select atleast 3 option above is required</small>
                 </div>
             </mat-card-content>
             <mat-card-footer  align="end" class="py-3">
@@ -85,7 +109,7 @@
         </mat-card>
     </mat-step>
 
-    <mat-step>
+    <mat-step [completed]="responseVal.valid">
         <mat-card class="col-md-5 my-5">
             <mat-card-content>
                 <label id="radio-group-label"> How responsive have we been to your questions or concerns about our products?</label>
@@ -95,7 +119,13 @@
                         {{type}}
                       </mat-option>
                     </mat-select>
+                    <div *ngIf="responseVal.invalid && responseVal.touched">
+                        <small *ngIf="responseVal.errors?.required">select one of the above option</small>
+                    </div>
                   </mat-form-field>
+                  <div *ngIf="responseVal.invalid && responseVal.untouched">
+                    <small *ngIf="responseVal.errors?.required">Its is required field please select options above</small>
+                </div>
             </mat-card-content>
             <mat-card-footer  align="end" class="py-3">
                 <button mat-raised-button color="primary" matStepperPrevious>previous</button>
@@ -104,7 +134,7 @@
         </mat-card>
     </mat-step>
 
-    <mat-step>
+    <mat-step [completed]="ratingVal.valid">
         <mat-card class="col-md-5 my-5">
             <mat-card-title class="text-center">Rate us !!!</mat-card-title>
             <div class="text-center">
@@ -112,11 +142,13 @@
                     <app-star-rating (starEnter)="onStarEnter($event)" (starLeave)="onStarLeave($event)" (starClicked)="onStarClicked($event)"
                     [stars]="no" [rating]="rating || hoverState"></app-star-rating>
                 </ng-conatiner>
+                <div *ngIf="ratingVal.invalid">
+                    <small *ngIf="ratingVal.errors?.required">please rate us required</small>
+                </div>
             </div>
             <mat-card-footer  align="end" class="py-3">
                 <button mat-raised-button color="primary" matStepperPrevious>previous</button>
-                <button class="mx-3" mat-raised-button color="warn" (click)="stepper.reset()">Reset</button>
-                <button (click)="submitHandler()"  mat-raised-button color="primary">submit</button>
+                <button class="mx-3" (click)="submitHandler()"  mat-raised-button color="primary">submit</button>
             </mat-card-footer>
         </mat-card>
     </mat-step>

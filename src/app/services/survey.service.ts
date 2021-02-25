@@ -7,5 +7,6 @@ import { BehaviorSubject } from 'rxjs';
 export class SurveyService {
 
   public email:BehaviorSubject<string> = new BehaviorSubject<string>('');
+  public formSubmission:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   constructor() { }
 }

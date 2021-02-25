@@ -21,3 +21,7 @@ app-star-rating{
 mat-slider{
     width: 100%;
 }
+
+small{
+    color: red;
+}
