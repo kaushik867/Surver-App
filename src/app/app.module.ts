@@ -8,6 +8,8 @@ import { MaterialsModule } from './materials/materials.module';
 import { HeaderComponent } from './header/header.component';
 import { SurveyModule } from './survey/survey.module';
 import { HomeModule } from './home/home.module';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpInterceptorService } from './services/http-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -20,11 +22,14 @@ import { HomeModule } from './home/home.module';
     BrowserAnimationsModule,
     MaterialsModule,
     SurveyModule,
-    HomeModule
+    HomeModule,
+    HttpClientModule
   ],
   exports:[
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {  FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { of } from 'rxjs';
+import { exhaustMap, delay } from 'rxjs/operators';
 import { SurveyService } from 'src/app/services/survey.service';
 
 @Component({
@@ -41,7 +43,7 @@ export class UserServeyComponent implements OnInit {
   public disabled="true";
   public emailData:string;
 
-  constructor(private email:SurveyService, private _fb: FormBuilder, private route: Router) {}
+  constructor(private _http:SurveyService, private _fb: FormBuilder, private route: Router) {}
 
   ngOnInit() {
     this.surveyForm = this._fb.group({
@@ -54,7 +56,7 @@ export class UserServeyComponent implements OnInit {
       rating:['', Validators.required]
     });
 
-   this.email.email.subscribe(data=>{
+   this._http.email.subscribe(data=>{
      this.surveyForm.controls.email.setValue(data);
      this.emailData = data;
    })
@@ -62,7 +64,7 @@ export class UserServeyComponent implements OnInit {
 
   EditChange(value){
     if(value){
-      this.email.email.next(value);
+      this._http.email.next(value);
     }
   }
 
@@ -94,7 +96,7 @@ export class UserServeyComponent implements OnInit {
     this.selectedFeaturesValue = [];
     this.FeaturesArray.controls.forEach((control,i)=>{
       if(control.value){
-        this.selectedFeaturesValue.push(this.features[i]);
+        this.selectedFeaturesValue.push({'featureDetails::Feature_xt':this.features[i]});
       }
     });
    if(this.selectedFeaturesValue.length>=3){
@@ -111,14 +113,36 @@ export class UserServeyComponent implements OnInit {
 
   submitHandler(){
     if(this.surveyForm.valid && this.featureSelected){
-      this.surveyForm.value['email']= this.emailData;
-      this.surveyForm.value.feature = this.selectedFeaturesValue;
-      this.email.formSubmission.next(true);
-      this.route.navigate(['/thanks']);
+      console.log(this.surveyForm.value)
+      let formData = {
+          fieldData:{
+            Name_xt : this.surveyForm.value['name'],
+            Email_xt: this.emailData,
+            Age_xn: this.surveyForm.value['age'],
+            response_xt: this.surveyForm.value['responsiveness'],
+            Review_xt: this.surveyForm.value['review'],
+            Rating_xn: this.surveyForm.value['rating']
+          },
+        portalData:{
+          featureDetails:this.selectedFeaturesValue
+        }
+      }
+      console.log(formData);
+      of(formData).pipe(
+        delay(1000),
+        exhaustMap((data)=> this._http.postSurvey(data))
+        ).subscribe(data=>{
+          if(data.messages[0].code == 0 && data.messages[0].message == 'OK'){
+            this.surveyForm.reset();
+            this._http.email.next('');
+            this._http.formSubmission.next(true);
+            this.route.navigate(['/thanks']);
+          }
+        })
     }
   }
 
   changeEmail(val){
-    this.email.email.next(val.target.value);
+    this._http.email.next(val.target.value);
   }
 }
