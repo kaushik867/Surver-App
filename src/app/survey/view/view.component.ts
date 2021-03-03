@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { mergeMap } from 'rxjs/operators';
+import { Survey } from 'src/app/modals/survey.modal';
 import { SpinnerLoadService } from 'src/app/services/spinner-load.service';
 import { SurveyService } from 'src/app/services/survey.service';
 
@@ -10,7 +11,7 @@ import { SurveyService } from 'src/app/services/survey.service';
 })
 export class ViewComponent implements OnInit {
 
-  data:object;
+  data:Survey;
   feature:Array<string>;
   constructor(private _http: SurveyService, public loader: SpinnerLoadService) { }
   public star=[1,2,3,4,5];
