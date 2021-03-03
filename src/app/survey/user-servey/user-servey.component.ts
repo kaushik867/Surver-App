@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import {  FormBuilder, Validators } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
-import { exhaustMap, delay } from 'rxjs/operators';
+import { exhaustMap, delay, tap } from 'rxjs/operators';
 import { SurveyService } from 'src/app/services/survey.service';
 
 @Component({
@@ -42,8 +41,10 @@ export class UserServeyComponent implements OnInit {
   public featureSelected:boolean = false;
   public disabled="true";
   public emailData:string;
+  @ViewChild('btn') submit :ElementRef;
+  private formData;
 
-  constructor(private _http:SurveyService, private _fb: FormBuilder, private route: Router) {}
+  constructor(public _http:SurveyService, private _fb: FormBuilder, private route: Router) {}
 
   ngOnInit() {
     this.surveyForm = this._fb.group({
@@ -113,8 +114,7 @@ export class UserServeyComponent implements OnInit {
 
   submitHandler(){
     if(this.surveyForm.valid && this.featureSelected){
-      console.log(this.surveyForm.value)
-      let formData = {
+      this.formData = {
           fieldData:{
             Name_xt : this.surveyForm.value['name'],
             Email_xt: this.emailData,
@@ -127,15 +127,17 @@ export class UserServeyComponent implements OnInit {
           featureDetails:this.selectedFeaturesValue
         }
       }
-      console.log(formData);
-      of(formData).pipe(
+     
+      this._http.getToken().pipe(
+        tap((token)=> this._http.token.next(token['response']['token'])),
         delay(1000),
-        exhaustMap((data)=> this._http.postSurvey(data))
+        exhaustMap(()=> this._http.postSurvey(this.formData))
         ).subscribe(data=>{
           if(data.messages[0].code == 0 && data.messages[0].message == 'OK'){
             this.surveyForm.reset();
-            this._http.email.next('');
+            this._http.email.next(null);
             this._http.formSubmission.next(true);
+            this._http.Id.next(data['response']['recordId']);
             this.route.navigate(['/thanks']);
           }
         })

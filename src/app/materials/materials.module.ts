@@ -16,6 +16,9 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSliderModule} from '@angular/material/slider';
+import {MatTableModule} from '@angular/material/table';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 const materialComponent = [
   MatButtonModule,
@@ -34,8 +37,10 @@ const materialComponent = [
   MatStepperModule,
   MatTabsModule,
   MatToolbarModule,
-  MatSliderModule
-  
+  MatSliderModule,
+  MatTableModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule
 ]
 
 @NgModule({

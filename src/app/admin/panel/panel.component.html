@@ -1,0 +1,132 @@
+<app-spinner-loader *ngIf="loader.isLoading | async"></app-spinner-loader>
+<div class="rating mx-3 py-4" *ngIf="!(loader.isLoading | async) && !error">
+  <h2 class="py-1 px-2">User Rating
+    <h5>based on {{totalRating}} reviews.</h5>
+  </h2>
+  <mat-divider></mat-divider>
+  <div class="row">
+    <div class="mx-4">
+      <div>5 star</div>
+    </div>
+    <div class="middle">
+      <div class="bar-container">
+        <div [class.bar-5]="star5>0" class="bar-5" [ngStyle]="{'width': (star5/totalRating)*100 +'%'}"></div>
+      </div>
+    </div>
+    <div class="mx-4">
+      <div>{{star5}} ({{(star5/totalRating)*100 | number:'1.0-0'}} %)</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="mx-4">
+      <div>4 star</div>
+    </div>
+    <div class="middle">
+      <div class="bar-container">
+        <div [class.bar-4]="star4>0" [ngStyle]="{'width': (star4/totalRating)*100 +'%'}"></div>
+      </div>
+    </div>
+    <div class="mx-4">
+      <div>{{star4}} ({{(star4/totalRating)*100 | number:'1.0-0'}} %)</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="mx-4">
+      <div>3 star</div>
+    </div>
+    <div class="middle">
+      <div class="bar-container">
+        <div [class.bar-3]="star3>0" [ngStyle]="{'width': (star3/totalRating)*100 +'%'}"></div>
+      </div>
+    </div>
+    <div class="mx-4">
+      <div>{{star3}} ({{(star3/totalRating)*100 | number:'1.0-0'}} %)</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="mx-4">
+      <div>2 star</div>
+    </div>
+    <div class="middle">
+      <div class="bar-container">
+        <div [class.bar-2]="star2>0" [ngStyle]="{'width': (star2/totalRating)*100 +'%'}"></div>
+      </div>
+    </div>
+    <div class="mx-4">
+      <div>{{star2}} ({{(star2/totalRating)*100 | number:'1.0-0'}} %)</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="mx-4">
+      <div>1 star</div>
+    </div>
+    <div class="middle">
+      <div class="bar-container">
+        <div [class.bar-1]="star1>0" [ngStyle]="{'width': (star1/totalRating)*100 +'%'}"></div>
+      </div>
+    </div>
+    <div class="mx-4">
+      <div>{{star1}} ({{(star1/totalRating)*100 | number:'1.0-0'}} %)</div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!error && !(loader.isLoading | async)">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 my-5" *ngIf="!(loader.isLoading | async)">
+
+      <ng-container matColumnDef="Name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.fieldData.Name_xt}} </td>
+      </ng-container>
+    
+      
+      <ng-container matColumnDef="Email">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let element"> {{element.fieldData.Email_xt}} </td>
+      </ng-container>
+    
+      
+      <ng-container matColumnDef="Age">
+        <th mat-header-cell *matHeaderCellDef> Age </th>
+        <td mat-cell *matCellDef="let element"> {{element.fieldData.Age_xn}} </td>
+      </ng-container>
+    
+      
+      <ng-container matColumnDef="Response">
+        <th mat-header-cell *matHeaderCellDef> Response </th>
+        <td mat-cell *matCellDef="let element"> {{element.fieldData.Response_xt}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Review">
+          <th mat-header-cell *matHeaderCellDef> Review </th>
+          <td mat-cell *matCellDef="let element"> {{element.fieldData.Review_xt}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Feature">
+          <th mat-header-cell *matHeaderCellDef> Feature </th>
+          <td mat-cell *matCellDef="let element">
+              <ng-container *ngFor="let feature of element.portalData.featureDetails">
+                  <div>
+                      {{feature['featureDetails::Feature_xt']}}
+                  </div>
+              </ng-container>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Rating">
+          <th mat-header-cell *matHeaderCellDef> Rating </th>
+          <td mat-cell *matCellDef="let element"> {{element.fieldData.Rating_xn}} </td>
+        </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+  
+  <div *ngIf="error && !(loader.isLoading | async)">
+    <app-error></app-error>
+  </div>

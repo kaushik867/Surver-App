@@ -6,6 +6,11 @@ import { StarRatingComponent } from './star-rating/star-rating.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ThanksComponent } from './thanks/thanks.component';
 import { RouterModule } from '@angular/router';
+import { ViewComponent } from './view/view.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpInterceptorService } from '../services/http-interceptor.service';
+import { LoaderModule } from '../loader/loader.module';
+import { ErrorModule } from '../error/error.module';
 
 
 
@@ -14,17 +19,23 @@ import { RouterModule } from '@angular/router';
     UserServeyComponent,
     StarRatingComponent,
     ThanksComponent,
+    ViewComponent,
   ],
   imports: [
     CommonModule,
     MaterialsModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    LoaderModule,
+    ErrorModule
   ],
   exports:[
     UserServeyComponent,
-    ThanksComponent
+    ThanksComponent,
+  ],
+  providers:[
+    {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
   ]
 })
 export class SurveyModule { }

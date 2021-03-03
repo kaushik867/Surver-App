@@ -1,30 +1,43 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs';
+import { SurveyService } from './survey.service';
+import { environment } from '../../environments/environment'
+import { SpinnerLoadService } from './spinner-load.service';
+import { finalize } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpInterceptorService implements HttpInterceptor {
-  httpOptions = btoa('Admin:mindfire');
-  constructor() { }
+ 
+  basic =btoa(environment.userName+':'+environment.password)
+  constructor(public injector: Injector, public loader: SpinnerLoadService) { }
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if(req.url == 'https://192.168.10.62/fmi/data/v1/databases/surveyApp/sessions')
-    {
+    this.loader.isLoading.next(true);
+    if(req.url == 'https://192.168.10.62/fmi/data/v1/databases/surveyApp_v1/sessions')
+    { 
        req = req.clone({
          setHeaders: {
-           'Authorization': `Basic ${this.httpOptions}`,
+           'Authorization': `Basic ${this.basic}`,
         },
        });
     }
     else{
       req = req.clone({
         setHeaders: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${this.injector.get(SurveyService).tokenKey()}`,
        },
       });
       localStorage.clear();
     }
-    return next.handle(req);
+    return next.handle(req).pipe(
+      finalize(
+        ()=>{
+          this.loader.isLoading.next(false);
+        }
+      )
+    );
   }
 }

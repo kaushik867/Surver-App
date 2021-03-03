@@ -12,9 +12,7 @@ export class HomeComponent implements OnInit {
   constructor(private _http:SurveyService, private router:Router) { }
 
   ngOnInit(): void {
-      this._http.getToken().subscribe(data=>{
-        localStorage.setItem('token',data['response']['token']);
-      })
+      
   }
 
   checkEmail(email){

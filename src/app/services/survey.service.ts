@@ -8,30 +8,34 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class SurveyService {
 
-  public email:BehaviorSubject<string> = new BehaviorSubject<string>('');
+  public email:BehaviorSubject<string> = new BehaviorSubject<string>(null);
   public formSubmission:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
+  public token:BehaviorSubject<string> = new BehaviorSubject<string>(null);
+  private responseToken;
+  public Id:BehaviorSubject<number> = new BehaviorSubject<number>(null);
+  public logIn:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false); 
   constructor(private _http: HttpClient) { }
 
-  data={
-    fieldData:{
-        Name_xt : 'Ashish',
-        Email_xt: 'kaushik@gamil.com'
-    },
-    portalData:{
-      featureDetails:[
-       {'featureDetails::Feature_xt': 'good'},
-       {'featureDetails::Feature_xt': 'hellllo'}
-    
-      ]
-    }
-  }
-  
   getToken():Observable<any>{
-    return this._http.post('https://192.168.10.62/fmi/data/v1/databases/surveyApp/sessions',{});
+    return this._http.post('https://192.168.10.62/fmi/data/v1/databases/surveyApp_v1/sessions',{});
   }
 
   postSurvey(data):Observable<any>{
-    return this._http.post('https://192.168.10.62/fmi/data/v1/databases/surveyApp/layouts/surveyApp/records',data);
+    return this._http.post('https://192.168.10.62/fmi/data/v1/databases/surveyApp_v1/layouts/surveyApp/records',data);
+  }
+
+  getdata(id):Observable<any>{
+    return this._http.get(`https://192.168.10.62/fmi/data/v1/databases/surveyApp_v1/layouts/surveyApp/records/${id}`);
+  }
+
+  getAllData(){
+    return this._http.get('https://192.168.10.62/fmi/data/v1/databases/surveyApp_v1/layouts/surveyApp/records');
+  }
+
+  tokenKey(){
+    this.token.subscribe(token=>{
+     this.responseToken =token;
+    });
+    return this.responseToken;
   }
 }

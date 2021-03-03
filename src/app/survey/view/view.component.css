@@ -1,0 +1,9 @@
+mat-card{
+    width: 40%;
+    margin: auto;
+}
+
+label{
+    display: block;
+    font-weight: bolder;
+}

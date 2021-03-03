@@ -1,0 +1,31 @@
+<div class="py-5 container">
+    <mat-card>
+        <mat-card-title>Log In</mat-card-title>
+        <mat-card-content>
+            <form class="example-form" #userForm="ngForm" id="regform" (submit)="formSubmit(userForm)">
+                <mat-form-field class="example-full-width">
+                <mat-label>User Name</mat-label>
+                <input tyep="text" matInput placeholder="Enter you username" #name="ngModel" name='user' required pattern="^[a-zA-Z ]+[,\.'\-]?[a-zA-Z ]+$"
+                [class.is-invalid]="name.invalid && name.touched" [class.is-valid]="name.valid" ngModel>
+                <small [class.d-none]="name.valid || name.untouched">name is required and must be an apphabet</small>
+                </mat-form-field>
+            
+                <mat-form-field class="example-full-width">
+                <mat-label>password</mat-label>
+                <input type="password" required matInput placeholder="Enter you password" #password="ngModel" name='password' ngModel
+                [class.is-valid]="password.valid" [class.is-invalid]="password.invalid && password.touched">
+                <small [class.d-none]="password.valid || password.untouched">password is required</small>
+                </mat-form-field>
+                <mat-card-footer class="mx-2" *ngIf="login">
+                    <small>Unathorised Access Invalid credentials</small>
+                </mat-card-footer>
+                <mat-card-actions align="end">
+                    <button type="submit"  [disabled]="userForm.invalid" mat-raised-button color="primary">Login</button>
+                </mat-card-actions>
+            </form>
+        </mat-card-content>
+        
+    </mat-card>
+    
+</div>
+

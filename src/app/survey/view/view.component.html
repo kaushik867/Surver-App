@@ -1,0 +1,43 @@
+<app-spinner-loader *ngIf="loader.isLoading | async"></app-spinner-loader>
+
+<div *ngIf="data && !(loader.isLoading | async)">
+    <mat-card-title class="my-3 text-center" >Your responses</mat-card-title>
+    <mat-card class="my-3">
+        <label> Your Email : </label>
+        <div>{{data.fieldData.Email_xt}}</div>
+    </mat-card>
+    <mat-card class="my-3">
+        <label> Your Name : </label>
+        <div> {{data.fieldData.Name_xt}}</div>
+    </mat-card>
+    <mat-card class="my-3">
+        <label> Your Age</label>
+        <div> {{data.fieldData.Age_xn}}</div>
+    </mat-card>
+    <mat-card class="my-3">
+        <label> Which of the following words would you use to describe our product?</label>
+        <div> {{data.fieldData.Review_xt}}</div>
+    </mat-card>
+    <mat-card class="my-3">
+        <label> Which 3 features are the most valuable to you?</label>
+        <ng-container *ngFor="let features of feature">
+            <div>
+                {{features['featureDetails::Feature_xt']}}
+            </div>
+        </ng-container>
+    </mat-card>
+    <mat-card class="my-3">
+        <label> How responsive have we been to your questions or concerns about our products?</label>
+        <div> {{data.fieldData.Response_xt}}</div>
+    </mat-card>
+    <mat-card class="my-3">
+        <label> rating </label>
+        <ng-conatiner *ngFor="let no of star">
+            <app-star-rating [stars]="no" [rating]="data.fieldData.Rating_xn"></app-star-rating>
+        </ng-conatiner>
+    </mat-card>
+</div>
+
+<div *ngIf="!data && !(loader.isLoading | async)">
+    <app-error></app-error>
+</div>
