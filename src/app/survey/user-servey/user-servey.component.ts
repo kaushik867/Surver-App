@@ -43,6 +43,7 @@ export class UserServeyComponent implements OnInit {
   public emailData:string;
   @ViewChild('btn') submit :ElementRef;
   private formData;
+  public btnClicked: boolean = false;
 
   constructor(public _http:SurveyService, private _fb: FormBuilder, private route: Router) {}
 
@@ -113,6 +114,7 @@ export class UserServeyComponent implements OnInit {
   }
 
   submitHandler(){
+    this.btnClicked = true;
     if(this.surveyForm.valid && this.featureSelected){
       this.formData = {
           fieldData:{
@@ -130,7 +132,6 @@ export class UserServeyComponent implements OnInit {
      
       this._http.getToken().pipe(
         tap((token)=> this._http.token.next(token['response']['token'])),
-        delay(1000),
         exhaustMap(()=> this._http.postSurvey(this.formData))
         ).subscribe(data=>{
           if(data.messages[0].code == 0 && data.messages[0].message == 'OK'){

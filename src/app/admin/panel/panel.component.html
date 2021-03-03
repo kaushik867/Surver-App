@@ -97,7 +97,7 @@
     
       
       <ng-container matColumnDef="Response">
-        <th mat-header-cell *matHeaderCellDef> Response </th>
+        <th mat-header-cell *matHeaderCellDef> Response to User </th>
         <td mat-cell *matCellDef="let element"> {{element.fieldData.Response_xt}} </td>
       </ng-container>
 
@@ -107,7 +107,7 @@
         </ng-container>
 
         <ng-container matColumnDef="Feature">
-          <th mat-header-cell *matHeaderCellDef> Feature </th>
+          <th mat-header-cell *matHeaderCellDef> Feature Liked</th>
           <td mat-cell *matCellDef="let element">
               <ng-container *ngFor="let feature of element.portalData.featureDetails">
                   <div>

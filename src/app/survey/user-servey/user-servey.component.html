@@ -148,7 +148,7 @@
             </div>
             <mat-card-footer  align="end" class="py-3">
                 <button mat-raised-button color="primary" matStepperPrevious>previous</button>
-                <button class="mx-3" (click)="submitHandler()"  mat-raised-button color="primary" #btn>submit</button>
+                <button class="mx-3" [disabled]='btnClicked' (click)="submitHandler()"  mat-raised-button color="primary" #btn>submit</button>
             </mat-card-footer>
         </mat-card>
     </mat-step>

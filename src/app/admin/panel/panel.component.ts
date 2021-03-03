@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { map, shareReplay} from 'rxjs/operators';
+import { Survey } from 'src/app/modals/survey.modal';
 import { SpinnerLoadService } from 'src/app/services/spinner-load.service';
 import { SurveyService } from 'src/app/services/survey.service';
 
@@ -14,7 +15,7 @@ import { SurveyService } from 'src/app/services/survey.service';
 export class PanelComponent implements OnInit {
 
   displayedColumns: string[] = ['Name','Email','Age','Review','Response', 'Feature','Rating'];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  dataSource: MatTableDataSource<Survey> = new MatTableDataSource<Survey>();
   star1:number = 0;
   star2:number = 0;
   star3:number = 0;
