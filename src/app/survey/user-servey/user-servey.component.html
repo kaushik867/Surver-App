@@ -2,7 +2,7 @@
 <app-spinner-loader *ngIf="loader.isLoading | async">
 </app-spinner-loader>
 
-<mat-horizontal-stepper #stepper linear *ngIf="!(loader.isLoading | async)">
+<mat-horizontal-stepper #stepper linear *ngIf="!(loader.isLoading | async) && Question">
     <mat-step>
         <mat-card class="my-5 col-md-5">
             <mat-card-title class="text-center">Welcome</mat-card-title>
@@ -143,5 +143,6 @@
     </form>
 </mat-horizontal-stepper>
  
-
-
+<div *ngIf="!Question && !(loader.isLoading | async)">
+    <app-error></app-error>
+</div>

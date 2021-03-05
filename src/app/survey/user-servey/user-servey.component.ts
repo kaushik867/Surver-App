@@ -1,6 +1,6 @@
-import { ConditionalExpr } from '@angular/compiler';
+
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { exhaustMap, delay, tap } from 'rxjs/operators';
 import { SpinnerLoadService } from 'src/app/services/spinner-load.service';
@@ -100,7 +100,6 @@ export class UserServeyComponent implements OnInit {
 
   addFeatureControls(arr){
     const featureControls = arr['portalData']['surveyOptions'].map(element=>{
-      // console.log(element['surveyOptions::Options_xt']);
       this.features.push(element['surveyOptions::Options_xt']);
       return this._fb.control(false);
     })
@@ -118,7 +117,7 @@ export class UserServeyComponent implements OnInit {
         this.selectedFeaturesValue.push({'featureDetails::Feature_xt':this.features[i]});
       }
     });
-    console.log(this.selectedFeaturesValue);
+
    if(this.selectedFeaturesValue.length>=3){
     this.featureSelected = true;
    }
@@ -127,42 +126,35 @@ export class UserServeyComponent implements OnInit {
    }
   }
 
-  editEmail(){
-    this.surveyForm.controls['email'].enable();
-  }
-
   submitHandler(){
-    this.btnClicked = true;
-    console.log(this.surveyForm.value);
-    console.log(this.selectedFeaturesValue);
-    // if(this.surveyForm.valid && this.featureSelected){
-    //   this.formData = {
-    //       fieldData:{
-    //         Name_xt : this.surveyForm.value['name'],
-    //         Email_xt: this.emailData,
-    //         Age_xn: this.surveyForm.value['age'],
-    //         response_xt: this.surveyForm.value['responsiveness'],
-    //         Review_xt: this.surveyForm.value['review'],
-    //         Rating_xn: this.surveyForm.value['rating']
-    //       },
-    //     portalData:{
-    //       featureDetails:this.selectedFeaturesValue
-    //     }
-    //   }
-     
-    //   this._http.getToken().pipe(
-    //     tap((token)=> this._http.token.next(token['response']['token'])),
-    //     exhaustMap(()=> this._http.postSurvey(this.formData))
-    //     ).subscribe(data=>{
-    //       if(data.messages[0].code == 0 && data.messages[0].message == 'OK'){
-    //         this.surveyForm.reset();
-    //         this._http.email.next(null);
-    //         this._http.formSubmission.next(true);
-    //         this._http.Id.next(data['response']['recordId']);
-    //         this.route.navigate(['/thanks']);
-    //       }
-    //     })
-    // }
+    if(this.surveyForm.valid && this.featureSelected){
+      this.btnClicked = true;
+      this.formData = {
+          fieldData:{
+            Name_xt : this.surveyForm.value['name'],
+            Email_xt: this.surveyForm.value['email'],
+            Age_xn: this.surveyForm.value['age'],
+            response_xt: this.surveyForm.value['responsive'],
+            Review_xt: this.surveyForm.value['review'],
+            Rating_xn: this.surveyForm.value['rating']
+          },
+        portalData:{
+          featureDetails:this.selectedFeaturesValue
+        }
+      }
+      
+      this._http.getToken().pipe(
+        tap((token)=> this._http.token.next(token['response']['token'])),
+        exhaustMap(()=> this._http.postSurvey(this.formData))
+        ).subscribe(data=>{
+          if(data.messages[0].code == 0 && data.messages[0].message == 'OK'){
+            this.surveyForm.reset();
+            this._http.formSubmission.next(true);
+            this._http.Id.next(data['response']['recordId']);
+            this.route.navigate(['/thanks']);
+          }
+        })
+    }
   }
 
   
