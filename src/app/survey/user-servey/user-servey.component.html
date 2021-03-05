@@ -1,157 +1,147 @@
-{{_http.token | async}}
-<mat-horizontal-stepper #stepper linear>
+
+<app-spinner-loader *ngIf="loader.isLoading | async">
+</app-spinner-loader>
+
+<mat-horizontal-stepper #stepper linear *ngIf="!(loader.isLoading | async)">
+    <mat-step>
+        <mat-card class="my-5 col-md-5">
+            <mat-card-title class="text-center">Welcome</mat-card-title>
+            <mat-card-subtitle class="text-center">Take the 5-minutes survey now</mat-card-subtitle>
+            <mat-card-subtitle>
+                <p>
+                    We have the lots of idea how to make The Product better, 
+                    But we realized that what we think does'nt really matter. <strong>Its what you think</strong> . 
+                    its your ideas that should dictate every decision we make here.
+                </p>
+                <p class="my-3">
+                    can you spare 5 minutes and tell us to improve?
+                    <br>
+            </mat-card-subtitle>
+            <mat-card-footer align="end" class="py-3">
+                <button class="mx-3" mat-raised-button color="primary"  matStepperNext>proceed</button>
+            </mat-card-footer>
+        </mat-card>
+    </mat-step>
     <form [formGroup]="surveyForm">
-    <mat-step [completed]="emailVal.valid || disabled">
-        <mat-card class="col-md-5 my-5">
-            <mat-card-content>
-               <mat-form-field>
-                    <mat-label>Email</mat-label>
-                    <input matInput placeholder="Ex. example.com" formControlName='email' (change)="changeEmail($event)">
-                    <div *ngIf="emailVal.invalid && emailVal.touched">
-                        <small *ngIf="emailVal.errors?.required">Email is required</small>
-                        <small *ngIf="emailVal.errors?.pattern">Invalid email (eg: example@gmail.com)</small>
-                    </div>
-                </mat-form-field>
-                <div *ngIf="emailVal.invalid && emailVal.untouched">
-                    <small *ngIf="emailVal.errors?.required">Email is required please enter you e-mail</small>
-                </div>
-            </mat-card-content>
-            <mat-card-footer align="end" class="py-3">
-                <button *ngIf="disabled"  mat-raised-button color="aceent" (click)="editEmail(); disabled = !disabled">Edit</button>
-                <button class="mx-3" mat-raised-button color="primary"  matStepperNext>next</button>
-            </mat-card-footer>
-        </mat-card>
-    </mat-step>
+        <div *ngFor = "let items of Question">
+            <ng-template [ngIf]="items.fieldData.ControlType_xt == 'textbox'">
+                <mat-step [completed]="this.surveyForm.get(items.fieldData.Id_xt).valid">
+                    <mat-card class="col-md-5 my-5">
+                        <mat-card-content>
+                            <mat-form-field>
+                                <mat-label>{{items.fieldData.Questions_xt}}</mat-label>
+                                <input matInput [formControlName]="items.fieldData.Id_xt">
+                                <small *ngIf="this.surveyForm.get(items.fieldData.Id_xt).errors?.pattern && items.fieldData.Id_xt== 'email'">
+                                    Invalid email (enter like: example@gmail.com)
+                                </small> 
+                                <small *ngIf="this.surveyForm.get(items.fieldData.Id_xt).errors?.pattern && items.fieldData.Id_xt=='name'">
+                                    Invalid name (must containe atleast 2 character)
+                                </small> 
+                            </mat-form-field>
+                            <small *ngIf="this.surveyForm.get(items.fieldData.Id_xt).invalid">
+                                Enter required data
+                            </small>
+                        </mat-card-content>
+                        <mat-card-footer align="end" class="py-3">
+                            <!-- <button *ngIf="disabled"  mat-raised-button color="aceent" (click)="editEmail(); disabled = !disabled">Edit</button> -->
+                            <button class="mx-3" mat-raised-button color="primary"  matStepperPrevious>next</button>
+                            <button class="mx-3" mat-raised-button color="primary"  matStepperNext>next</button>
+                        </mat-card-footer>
+                    </mat-card>
+                </mat-step>
+            </ng-template>
 
-    <mat-step [completed]="nameVal.valid">
-        <mat-card class="col-md-5 my-5">
-            <mat-card-content>
-                <mat-form-field>
-                    <mat-label>name</mat-label>
-                    <input matInput placeholder="Ex. example.com" formControlName='name'>
-                    <div *ngIf="nameVal.invalid && nameVal.touched">
-                        <small *ngIf="nameVal.errors?.required">name is required</small>
-                        <small *ngIf="nameVal.errors?.pattern">Must be min 2 character</small>
-                    </div>
-                </mat-form-field>
-                <div *ngIf="nameVal.invalid && nameVal.untouched">
-                    <small *ngIf="nameVal.errors?.required">Name is required please enter you name</small>
-                </div>
-            </mat-card-content>
-            <mat-card-footer align="end" class="py-3">
-                <button class="mx-3" mat-raised-button color="primary" matStepperPrevious>previous</button>
-                <button class="mx-3" mat-raised-button color="primary" matStepperNext>next</button>
-            </mat-card-footer>
-        </mat-card>
-    </mat-step>
+            <ng-template [ngIf]="items.fieldData.ControlType_xt == 'radioGroup'">
+                <mat-step [completed]="this.surveyForm.get(items.fieldData.Id_xt).valid">
+                    <mat-card class="col-md-5 my-5">
+                        <mat-card-content>
+                            <mat-label>{{items.fieldData.Questions_xt}}</mat-label>
+                                <mat-radio-group aria-label="Select an option" [formControlName]="items.fieldData.Id_xt">
+                                    <mat-radio-button *ngFor="let feature of items.portalData.surveyOptions"  [value]="feature['surveyOptions::Options_xt']">
+                                        {{feature['surveyOptions::Options_xt']}}
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                        </mat-card-content>
+                        <small *ngIf="this.surveyForm.get(items.fieldData.Id_xt).invalid">
+                            Select one of the above option
+                        </small>
+                        <mat-card-footer  align="end" class="py-3">
+                            <button mat-raised-button color="primary" matStepperPrevious>previous</button>
+                            <button class="mx-3" mat-raised-button color="primary" matStepperNext>Next</button>
+                        </mat-card-footer>
+                    </mat-card>
+                </mat-step>
+            </ng-template>
 
-    <mat-step [completed]="ageVal.valid">
-        <mat-card class="col-md-5 my-5">
-            <mat-card-content>
-                 <label id="checkbox-group-label">What is your age?</label>
-                <mat-slider 
-                    name="age"
-                    thumbLabel
-                    tickInterval="1"
-                    min="10"
-                    max="100"
-                    formControlName="age">
-                </mat-slider>
-                <div *ngIf="ageVal.invalid">
-                    <small *ngIf="ageVal.errors?.required">age is required slide above circle</small>
-                </div>
-            </mat-card-content>
-            your age is {{surveyForm.value.age}}
-            <mat-card-footer align="end" class="py-3">
-                <button class="mx-3" mat-raised-button color="primary" matStepperPrevious>previous</button>
-                <button class="mx-3" mat-raised-button color="primary" matStepperNext>next</button>
-            </mat-card-footer>
-        </mat-card>
-    </mat-step>
+            <ng-template [ngIf] = "items.fieldData.ControlType_xt == 'checkbox'">
+                <mat-step [completed]="featureSelected">
+                    <mat-card class="col-md-5 my-5">
+                        <mat-card-content>
+                            <label id="radio-group-label"> {{items.fieldData.Questions_xt}}</label>
+                                <div *ngFor='let controls of FeaturesArray.controls; let i = index'>
+                                    <mat-checkbox color="primary" [formControl]="controls" (change)="getSelectedFeaturesValues()">
+                                        {{features[i]}}
+                                    </mat-checkbox>
+                                </div>
+                                <div *ngIf="!featureSelected">
+                                    <small>Select atleast 3 option above is required</small>
+                                </div>    
+                        </mat-card-content>
+                        <mat-card-footer  align="end" class="py-3">
+                            <button mat-raised-button color="primary" matStepperPrevious>previous</button>
+                            <button class="mx-3" mat-raised-button color="primary" matStepperNext>Next</button>
+                        </mat-card-footer>
+                    </mat-card>
+                </mat-step>
+            </ng-template>
 
-    <mat-step [completed]="reviewVal.valid">
-        <mat-card class="col-md-5 my-5">
-            <mat-card-content>
-               <label id="checkbox-group-label">Which of the following words would you use to describe our product?</label>
-                <mat-radio-group aria-label="Select an option" formControlName="review">
-                    <mat-radio-button *ngFor="let type of productReview"  [value]="type">
-                        {{type}}
-                    </mat-radio-button>
-                </mat-radio-group>
-            </mat-card-content>
-            <div *ngIf="reviewVal.invalid">
-                <small *ngIf="reviewVal.errors?.required">select one of the above option</small>
-            </div>
-            <mat-card-footer  align="end" class="py-3">
-                <button mat-raised-button color="primary" matStepperPrevious>previous</button>
-                <button class="mx-3" mat-raised-button color="primary" matStepperNext>Next</button>
-            </mat-card-footer>
-        </mat-card>
-    </mat-step>
+            <ng-template [ngIf]="items.fieldData.ControlType_xt == 'dropdown'">
+                <mat-step [completed]="this.surveyForm.get(items.fieldData.Id_xt).valid">
+                    <mat-card class="col-md-5 my-5">
+                        <mat-card-content>
+                                    <mat-label>{{items.fieldData.Questions_xt}}</mat-label>
+                                    <mat-form-field>
+                                        <mat-select [formControlName]="items.fieldData.Id_xt" >
+                                            <mat-option *ngFor="let res of items.portalData.surveyOptions" [value]="res['surveyOptions::Options_xt']">
+                                            {{res['surveyOptions::Options_xt']}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>    
+                        </mat-card-content>
+                        <small *ngIf="this.surveyForm.get(items.fieldData.Id_xt).invalid">
+                            Select option from the dropdown menu
+                        </small>
+                        <mat-card-footer  align="end" class="py-3">
+                            <button mat-raised-button color="primary" matStepperPrevious>previous</button>
+                            <button class="mx-3" mat-raised-button color="primary" matStepperNext>Next</button>
+                        </mat-card-footer>
+                    </mat-card>
+                </mat-step>
+            </ng-template>
 
-    <mat-step [completed]="featureSelected">
-        <mat-card class="col-md-5 my-5">
-            <mat-card-content>
-                <label id="radio-group-label"> Which 3 features are the most valuable to you?</label>
-                <div *ngFor='let controls of FeaturesArray.controls; let i = index'>
-                    <mat-checkbox color="primary" [formControl]="controls" (change)="getSelectedFeaturesValues()">
-                        {{features[i]}}
-                    </mat-checkbox>
-                </div>
-                <div *ngIf="!featureSelected">
-                    <small>Select atleast 3 option above is required</small>
-                </div>
-            </mat-card-content>
-            <mat-card-footer  align="end" class="py-3">
-                <button mat-raised-button color="primary" matStepperPrevious>previous</button>
-                <button class="mx-3" mat-raised-button color="primary" matStepperNext>Next</button>
-            </mat-card-footer>
-        </mat-card>
-    </mat-step>
-
-    <mat-step [completed]="responseVal.valid">
-        <mat-card class="col-md-5 my-5">
-            <mat-card-content>
-                <label id="radio-group-label"> How responsive have we been to your questions or concerns about our products?</label>
-                <mat-form-field>
-                    <mat-select formControlName="responsiveness" >
-                      <mat-option *ngFor="let type of responsive" [value]="type">
-                        {{type}}
-                      </mat-option>
-                    </mat-select>
-                    <div *ngIf="responseVal.invalid && responseVal.touched">
-                        <small *ngIf="responseVal.errors?.required">select one of the above option</small>
-                    </div>
-                  </mat-form-field>
-                  <div *ngIf="responseVal.invalid && responseVal.untouched">
-                    <small *ngIf="responseVal.errors?.required">Its is required field please select options above</small>
-                </div>
-            </mat-card-content>
-            <mat-card-footer  align="end" class="py-3">
-                <button mat-raised-button color="primary" matStepperPrevious>previous</button>
-                <button class="mx-3" mat-raised-button color="primary" matStepperNext>Next</button>
-            </mat-card-footer>
-        </mat-card>
-    </mat-step>
-
-    <mat-step [completed]="ratingVal.valid">
-        <mat-card class="col-md-5 my-5">
-            <mat-card-title class="text-center">Rate us !!!</mat-card-title>
-            <div class="text-center">
-                <ng-conatiner *ngFor="let no of star">
-                    <app-star-rating (starEnter)="onStarEnter($event)" (starLeave)="onStarLeave($event)" (starClicked)="onStarClicked($event)"
-                    [stars]="no" [rating]="rating || hoverState"></app-star-rating>
-                </ng-conatiner>
-                <div *ngIf="ratingVal.invalid">
-                    <small *ngIf="ratingVal.errors?.required">please rate us required</small>
-                </div>
-            </div>
-            <mat-card-footer  align="end" class="py-3">
-                <button mat-raised-button color="primary" matStepperPrevious>previous</button>
-                <button class="mx-3" [disabled]='btnClicked' (click)="submitHandler()"  mat-raised-button color="primary" #btn>submit</button>
-            </mat-card-footer>
-        </mat-card>
-    </mat-step>
-</form>
+            <ng-template [ngIf] = "items.fieldData.ControlType_xt == 'other'">
+                <mat-step [completed]="this.surveyForm.get(items.fieldData.Id_xt).valid">
+                    <mat-card class="col-md-5 my-5">
+                        <mat-card-title class="text-center">Rate us !!!</mat-card-title>
+                            <div class="text-center">
+                                <ng-conatiner *ngFor="let no of star">
+                                    <app-star-rating (starEnter)="onStarEnter($event)" (starLeave)="onStarLeave($event)" (starClicked)="onStarClicked($event)"
+                                    [stars]="no" [rating]="rating || hoverState"></app-star-rating>
+                                </ng-conatiner>
+                            </div>
+                            <small *ngIf="this.surveyForm.get(items.fieldData.Id_xt).invalid">
+                                Rating us required
+                            </small>
+                        <mat-card-footer  align="end" class="py-3">
+                            <button mat-raised-button color="primary" matStepperPrevious>previous</button>
+                            <button class="mx-3" [disabled]='btnClicked' (click)="submitHandler()"  mat-raised-button color="primary" #btn>submit</button>
+                        </mat-card-footer>
+                    </mat-card>
+                </mat-step>
+            </ng-template>
+        </div>
+    </form>
 </mat-horizontal-stepper>
+ 
+
 

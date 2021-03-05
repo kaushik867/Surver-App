@@ -8,7 +8,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class SurveyService {
 
-  public email:BehaviorSubject<string> = new BehaviorSubject<string>(null);
   public formSubmission:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public token:BehaviorSubject<string> = new BehaviorSubject<string>(null);
   private responseToken;
@@ -30,6 +29,10 @@ export class SurveyService {
 
   getAllData(){
     return this._http.get('https://192.168.10.62/fmi/data/v1/databases/surveyApp_v1/layouts/surveyApp/records');
+  }
+
+  getQuestions(){
+    return this._http.get('https://192.168.10.62/fmi/data/v1/databases/surveyApp_v1/layouts/surveyQuestion/records')
   }
 
   tokenKey(){
